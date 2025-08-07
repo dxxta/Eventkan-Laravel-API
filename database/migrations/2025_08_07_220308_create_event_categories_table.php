@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('event_categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id')->nullable()->index();
+            $table->foreignId('category_id')->nullable()->index();
             $table->timestamps();
         });
     }

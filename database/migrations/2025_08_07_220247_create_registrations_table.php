@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignId('event_id')->nullable()->index();
+            $table->string('code');
+            $table->string('attachment');
+            $table->enum('status', ['process', 'finished', 'cancelled'])->default('process');
+            $table->timestamps();   
         });
     }
 

@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('audits', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('entity_id');
+            $table->string('entity_name');
+            $table->string('field_name');
+            $table->string('field_value');
+            $table->string('action');
+            $table->longText('note')->nullable();
             $table->timestamps();
         });
     }
