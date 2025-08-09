@@ -11,10 +11,11 @@ Route::middleware([GlobalErrorHandler::class])->group(function () {
     Route::post('/user/signup', [AuthController::class, 'signup']);
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/user/me', [AuthController::class, 'me']);
-        Route::post('/user/signout', [AuthController::class, 'signout']);
+        Route::delete('/user/signout', [AuthController::class, 'signout']);
         // Category Routes
         Route::get('/category/list', [CategoryController::class, 'index']);
         Route::post('/category/create', [CategoryController::class, 'create']);
+        Route::delete('/category/remove/{id}', [CategoryController::class, 'remove']);
         // Route::post('/categories', [CategoryController::class, 'store']);
         // Route::get('/categories/{category}', [CategoryController::class, 'show']);
         // Route::put('/categories/{category}', [CategoryController::class, 'update']);

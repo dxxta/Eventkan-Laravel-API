@@ -37,4 +37,22 @@ class CategoryController extends Controller
             return $this->errorResponse($th->getMessage(), 500);
         }
     }
+
+    public function remove(CategoryRequest $request, $id){
+        DB::beginTransaction();
+        try {
+            $category = Category::where('id', $id)->where('deleted_at', null)->first();
+            if (!$category) {
+                return $this->errorResponse('Category not found', 404);
+            }
+            $category->deleted_at = now();
+            $category->save();
+            DB::commit();
+
+            return $this->successResponse(new CategoryResource($category), 'Category removed successfully', 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->errorResponse($th->getMessage(), 500);
+        }
+    }
 }
