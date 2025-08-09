@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->longText('description');
-            $table->string('location');
+            $table->jsonb('location');
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('max_participants');

@@ -52,6 +52,8 @@ class Event extends Model
         'is_published' => 'boolean',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
+        'max_participants' => 'integer',
+        'location' => 'array',
     ];
 
     public function categories()
