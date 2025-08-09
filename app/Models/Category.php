@@ -11,11 +11,11 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'is_removed',
+        'deleted_at',
     ];
 
     protected $casts = [
-        'is_removed' => 'boolean',
+        'deleted_at' => 'datetime',
     ];
 
     public function events()
@@ -30,9 +30,9 @@ class Category extends Model
         });
     }
 
-    public function scopeActive($query)
+    public function index()
     {
-        return $query->where('is_removed', false);
+        return $this->where('deleted_at', null);
     }
 
     public function getTotalRegistrationsCountAttribute()

@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Category;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,13 +14,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Dinta Syaifuddin',
-            'email' => 'dintasyaifuddin@admin.com',
-            'password' => bcrypt('password'),
-            'roles' => 'admin',
+        if(User::where('email', 'dintasyaifuddin@admin.com')->first() == null){
+            User::factory()->create([
+                'name' => 'Dinta Syaifuddin',
+                'email' => 'dintasyaifuddin@admin.com',
+                'password' => bcrypt('admin123'),
+                'roles' => 'admin',
+            ]);
+        }
+        Category::firstOrCreate([
+            'name' => 'Festival',
+        ]);
+        Category::firstOrCreate([
+            'name' => 'Charity',
         ]);
     }
 }

@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('registrations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->foreignId('event_id')->nullable()->index();
+            $table->uuid('id')->primary();
+            $table->uuid('user_id')->nullable()->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->uuid('event_id')->nullable()->index();
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->string('code');
             $table->string('attachment');
             $table->enum('status', ['process', 'finished', 'cancelled'])->default('process');
-            $table->timestamps();   
+            $table->timestamps();
         });
     }
 
