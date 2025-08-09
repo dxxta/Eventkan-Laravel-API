@@ -22,6 +22,7 @@ class EventResource extends JsonResource
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'location' => $this->location,
+            'content' => $this->content,
             'max_participants' => $this->max_participants,
             'is_published' => $this->is_published,
             'created_at' => $this->created_at,

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->longText('description');
+            $table->longText('content');
             $table->jsonb('location');
             $table->date('start_date');
             $table->date('end_date');
