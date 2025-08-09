@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\GlobalErrorHandler;
+use App\Http\Controllers\EventController;
 
 Route::middleware([GlobalErrorHandler::class])->group(function () {
     Route::post('/user/signin', [AuthController::class, 'signin']);
@@ -19,8 +20,10 @@ Route::middleware([GlobalErrorHandler::class])->group(function () {
             Route::delete('/category/remove/{id}', [CategoryController::class, 'remove']);
         });
         // Event Routes
-        // Route::get('/event/list', [EventController::class, 'index']);
-        // Route::post('/event/create', [EventController::class, 'create']);
-        // Route::delete('/event/remove/{id}', [EventController::class, 'remove']);
+        Route::get('/event/list', [EventController::class, 'index']);
+        Route::middleware('validateRole:admin')->group(function () {
+            Route::post('/event/create', [EventController::class, 'create']);
+            Route::delete('/event/remove/{id}', [EventController::class, 'remove']);
+        });
     });
 });
