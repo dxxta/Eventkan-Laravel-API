@@ -4,10 +4,39 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Event extends Model
 {
     use HasFactory;
+
+    /**
+     * The "type" of the primary key ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = Str::uuid()->toString();
+            }
+        });
+    }
 
     protected $fillable = [
         'name',
@@ -50,7 +79,7 @@ class Event extends Model
         if (!$this->max_participants) {
             return null;
         }
-        
+
         $registeredCount = $this->registrations()->where('status', '!=', 'cancelled')->count();
         return max(0, $this->max_participants - $registeredCount);
     }
