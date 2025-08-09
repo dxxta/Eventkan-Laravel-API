@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('event_categories', function (Blueprint $table) {
-            $table->uuid("id")->primary();
             $table->uuid('event_id')->nullable()->index();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->uuid('category_id')->nullable()->index();
