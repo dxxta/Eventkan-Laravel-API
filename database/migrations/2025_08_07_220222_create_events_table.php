@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('max_participants');
+            $table->datetime('deleted_at')->nullable();
             $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
