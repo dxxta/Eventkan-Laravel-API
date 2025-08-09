@@ -14,11 +14,13 @@ Route::middleware([GlobalErrorHandler::class])->group(function () {
         Route::delete('/user/signout', [AuthController::class, 'signout']);
         // Category Routes
         Route::get('/category/list', [CategoryController::class, 'index']);
-        Route::post('/category/create', [CategoryController::class, 'create']);
-        Route::delete('/category/remove/{id}', [CategoryController::class, 'remove']);
-        // Route::post('/categories', [CategoryController::class, 'store']);
-        // Route::get('/categories/{category}', [CategoryController::class, 'show']);
-        // Route::put('/categories/{category}', [CategoryController::class, 'update']);
-        // Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+        Route::middleware('validateRole:admin')->group(function () {
+            Route::post('/category/create', [CategoryController::class, 'create']);
+            Route::delete('/category/remove/{id}', [CategoryController::class, 'remove']);
+        });
+        // Event Routes
+        // Route::get('/event/list', [EventController::class, 'index']);
+        // Route::post('/event/create', [EventController::class, 'create']);
+        // Route::delete('/event/remove/{id}', [EventController::class, 'remove']);
     });
 });

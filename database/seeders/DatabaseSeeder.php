@@ -14,12 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        if(User::where('email', 'dintasyaifuddin@admin.com')->first() == null){
+        $email = 'admin@eventkan.com';
+        if(User::where('email', $email)->first() == null){
             User::factory()->create([
-                'name' => 'Dinta Syaifuddin',
-                'email' => 'dintasyaifuddin@admin.com',
+                'name' => 'Dinta Admin',
+                'email' => $email,
                 'password' => bcrypt('admin123'),
-                'roles' => 'admin',
+                'role' => 'admin',
             ]);
         }
         Category::firstOrCreate([
