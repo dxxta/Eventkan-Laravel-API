@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+use App\Http\Traits\AuditTrait;
 
 class User extends Authenticatable
 {
@@ -39,6 +40,11 @@ class User extends Authenticatable
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
             }
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = now();
+            AuditTrait::createAudit($model);
         });
     }
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use App\Http\Traits\AuditTrait;
 
 class Category extends Model
 {
@@ -35,6 +36,11 @@ class Category extends Model
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
             }
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = now();
+            AuditTrait::createAudit($model);
         });
     }
 

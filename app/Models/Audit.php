@@ -35,18 +35,17 @@ class Audit extends Model
         });
     }
 
-    protected $fillable = [
-        'user_id',
-        'entity_id',
-        'entity_name',
-        'field_name',
-        'field_value',
-        'action',
-        'note',
+    // only managed by system
+    // protected $fillable = [];
+
+    protected $casts = [
+        'field_name' => 'array',
+        'field_value' => 'array',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

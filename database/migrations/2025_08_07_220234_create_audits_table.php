@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('entity_id');
             $table->string('entity_name');
-            $table->string('field_name');
-            $table->string('field_value');
+            $table->jsonb('field_name');
+            $table->jsonb('field_value');
             $table->string('action');
             $table->longText('note')->nullable();
             $table->timestamps();

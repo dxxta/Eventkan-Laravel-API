@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use App\Http\Traits\AuditTrait;
 
 class Event extends Model
 {
@@ -39,6 +40,7 @@ class Event extends Model
 
         static::updating(function ($model) {
             $model->updated_at = now();
+            AuditTrait::createAudit($model);
         });
     }
 

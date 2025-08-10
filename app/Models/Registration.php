@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Http\Traits\AuditTrait;
 
 class Registration extends Model
 {
@@ -32,6 +33,10 @@ class Registration extends Model
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
             }
+        });
+        static::updating(function ($model) {
+            $model->updated_at = now();
+            AuditTrait::createAudit($model);
         });
     }
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\GlobalErrorHandler;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\AuditController;
 
 Route::middleware([GlobalErrorHandler::class])->group(function () {
     // User Routes
@@ -17,19 +18,26 @@ Route::middleware([GlobalErrorHandler::class])->group(function () {
     'eventCategories']);
     // Category Routes
     Route::get('/category/list', [CategoryController::class, 'index']);
+
+    // Authentication:Routes
     Route::middleware(['auth:sanctum'])->group(function () {
         // User Routes
         Route::get('/user/me', [AuthController::class, 'me']);
         Route::delete('/user/signout', [AuthController::class, 'signout']);
-        // Category Routes
+        // Audit Routes
+        Route::get('/audit/list', [AuditController::class, 'index']);
+
+        // Admin: Routes
         Route::middleware('validateRole:admin')->group(function () {
+            // Category Routes
             Route::post('/category/create', [CategoryController::class, 'create']);
             Route::delete('/category/remove/{id}', [CategoryController::class, 'remove']);
-        });
-        // Event Routes
-        Route::middleware('validateRole:admin')->group(function () {
+            // Event Routes
             Route::post('/event/create', [EventController::class, 'create']);
+            Route::patch('/event/update/{id}', [EventController::class, 'update']);
             Route::delete('/event/remove/{id}', [EventController::class, 'remove']);
+            // Audit Routes
+            Route::get('/audit/{id}', [AuditController::class, 'show']);
         });
     });
 });
