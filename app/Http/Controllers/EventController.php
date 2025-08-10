@@ -7,14 +7,18 @@ use App\Models\Event;
 use App\Models\Category;
 use App\Http\Resources\EventResource;
 use App\Http\Requests\EventRequest;
+use App\Http\Requests\EventUpdateRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\EventCategoriesResource;
 
 class EventController extends Controller
 {
     public function index()
     {
         try {
-            $events = Event::where('is_published', true)->where('deleted_at', null)->get();
+            $events = Event::where('is_published', true)->where('deleted_at', null)->with('categories')->get();
 
             return $this->successResponse(EventResource::collection($events), 'Events fetched successfully', 200);
         } catch (\Throwable $th) {
@@ -53,7 +57,7 @@ class EventController extends Controller
         }
     }
 
-    public function update(EventRequest $request, $id){
+    public function update($id, EventUpdateRequest $request){
         $body = $request->validated();
         DB::beginTransaction();
         try {
@@ -61,14 +65,15 @@ class EventController extends Controller
             if (!$event) {
                 return $this->errorResponse('Event not found', 400);
             }
-            $event->name = $body['name'];
-            $event->description = $body['description'];
-            $event->content = $body['content'];
-            $event->start_date = $body['start_date'];
-            $event->end_date = $body['end_date'];
-            $event->location = $body['location'];
-            $event->max_participants = $body['max_participants'];
-            $event->is_published = $body['is_published'];
+            // Update only fields present in $body
+            foreach ($body as $key => $value) {
+                if ($key !== 'category_ids') {
+                    $event->$key = $value;
+                }
+            }
+            if (isset($body['category_ids'])) {
+                $event->categories()->sync($body['category_ids']);
+            }
             $event->save();
             DB::commit();
 
@@ -79,7 +84,7 @@ class EventController extends Controller
         }
     }
 
-    public function remove(EventRequest $request, $id){
+    public function remove($id){
         DB::beginTransaction();
         try {
             $event = Event::where('id', $id)->where('deleted_at', null)->first();
@@ -93,6 +98,36 @@ class EventController extends Controller
             return $this->successResponse(new EventResource($event), 'Event removed successfully', 200);
         } catch (\Throwable $th) {
             DB::rollBack();
+            return $this->errorResponse($th->getMessage(), 500);
+        }
+    }
+
+    public function show($id){
+        try {
+            $event = Event::where('id', $id)->where('deleted_at', null)->first();
+            if (!$event) {
+                return $this->errorResponse('Event not found', 400);
+            }
+            return $this->successResponse(new EventResource($event), 'Event fetched successfully', 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
+        }
+    }
+
+    public function eventCategories($id){
+        try {
+            $event = Event::where('id', $id)->where('deleted_at', null)->first();
+            if (!$event) {
+                return $this->errorResponse('Event not found', 400);
+            }
+
+            $categories = Category::where('deleted_at', null)->whereHas('events', function ($query) use ($event) {
+                $query->where('event_id', $event->id);
+            })->get();
+            // Log::info($categories);
+            // collection of category
+            return $this->successResponse(EventCategoriesResource::collection($categories), 'Event categories fetched successfully', 200);
+        } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage(), 500);
         }
     }

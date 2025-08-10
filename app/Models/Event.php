@@ -36,6 +36,10 @@ class Event extends Model
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
             }
         });
+
+        static::updating(function ($model) {
+            $model->updated_at = now();
+        });
     }
 
     protected $fillable = [
