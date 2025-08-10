@@ -18,7 +18,7 @@ return new class extends Migration
             $table->uuid('event_id')->nullable()->index();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->string('code');
-            $table->string('attachment');
+            $table->string('attachment')->nullable();
             $table->enum('status', ['process', 'finished', 'cancelled'])->default('process');
             $table->timestamps();
         });

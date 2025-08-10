@@ -29,6 +29,7 @@ Route::middleware([GlobalErrorHandler::class])->group(function () {
         Route::get('/audit/list', [AuditController::class, 'index']);
         // Registration Routes
         Route::post('/registration/create', [RegistrationController::class, 'create']);
+        Route::get('/registration/list', [RegistrationController::class, 'index']);
 
         // Admin: Routes
         Route::middleware('validateRole:admin')->group(function () {
