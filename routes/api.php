@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\GlobalErrorHandler;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\RegistrationController;
 
 Route::middleware([GlobalErrorHandler::class])->group(function () {
     // User Routes
@@ -26,6 +27,8 @@ Route::middleware([GlobalErrorHandler::class])->group(function () {
         Route::delete('/user/signout', [AuthController::class, 'signout']);
         // Audit Routes
         Route::get('/audit/list', [AuditController::class, 'index']);
+        // Registration Routes
+        Route::post('/registration/create', [RegistrationController::class, 'create']);
 
         // Admin: Routes
         Route::middleware('validateRole:admin')->group(function () {
